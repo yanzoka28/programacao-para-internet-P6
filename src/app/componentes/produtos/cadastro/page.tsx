@@ -4,32 +4,72 @@ import { useState } from "react"
 import LayoutContainer from "../../layout/page";
 import 'bulma/css/bulma.css'
 import { log } from "console";
-import Input from "../../commons/input";
+import Input from "../../commons/input/input";
+import { useProdutoService } from "@/app/services/produto/produtoService";
+import Message from "../../commons/message/message";
 
 const CadastroProduto = () => {
+    const produtoService = useProdutoService();
 
     const [description, setDescription] = useState(""); // Array de duas posições -> Nome do atributo DAO e GET/SET
     const [price, setPrice] = useState(""); // Array de duas posições -> Nome do atributo DAO e GET/SET
     const [maker, setMaker] = useState(""); // Array de duas posições -> Nome do atributo DAO e GET/SET
-    const [isActive, setisActive] = useState(""); // Array de duas posições -> Nome do atributo DAO e GET/SET
+    const [isActive, setisActive] = useState(true); // Array de duas posições -> Nome do atributo DAO e GET/SET
+
+    const [tipo, setTipo] = useState("")
+    const [mensagem, setMensagem] = useState("")
 
     const produto = {
         description,
-        price,
+        price: parseFloat(price),
         maker,
         isActive
 
     }
 
-    const enviar = () => {
-        console.log(produto);
+    const exibeMessage = (mensagem: any) => {
+        setMensagem(mensagem)
+        setTimeout(() => {setMensagem("")}, 5000)
+
+    }
+
+    const resetForm=()=>{
+        setDescription("");
+        setPrice("");
+        setMaker("");
+    }
+
+    const submit = () => {
+        let msg: string = "";
+
+        produtoService.salvarProduto(produto)
+        .then(res =>{
+            setTipo("primary")
+            msg = res.data.message;
+            resetForm;
+            
+        })
+        .catch(err => {
+            setTipo("danger")
+            
+            msg = err.response.data.errorMessage
+
+        })
+        .finally(() => {
+            exibeMessage(msg)
+        })
         
     }
 
     return (
         <LayoutContainer titulo="Cadastro de Produtos">
             <>
-            <Input onChange={setDescription} id="inputDescricao" label="Descrição" columnClass="is-12"/>
+            {mensagem && 
+            <Message tipo={tipo} mensagem={mensagem} onClose={() => setMensagem("")}/>
+            }
+            
+
+            <Input onChange={setDescription} id="inputDescricao" label="Descrição" columnClass="is-12" placeholder="Descrição do Produto"/>
             {/* <div className="field">
                 <label className="label" htmlFor="inputDescricao">
                     Descrição
@@ -60,17 +100,17 @@ const CadastroProduto = () => {
                     </div>
                 </div> */}
 
-                <Input onChange={setMaker} id="inputFabricante" label="Fabricante" columnClass="is-8"/>
+                <Input onChange={setMaker} id="inputFabricante" label="Fabricante" columnClass="is-8" placeholder="Fabricante"/>
 
             </div>
 
             <div className="field is-grouped">
                 <div className="control">
-                    <button className="button is-link" onClick={enviar}>Enviar</button>
+                    <button className="button in-info is-dark has-text-white" onClick={submit}>Enviar</button>
                 </div>
 
                 <div className="control">
-                    <button className="button is-link is-light">Cancelar</button>
+                    <button onClick={resetForm} className="button is-danger is-dark has-text-white is-link is-light">Cancelar</button>
                 </div>
             </div>
             </>
