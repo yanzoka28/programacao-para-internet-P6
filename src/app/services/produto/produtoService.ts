@@ -15,9 +15,22 @@ export const useProdutoService = () => {
         
     }
 
-    return {
-        salvarProduto
+    async function listAll(page = 0, size:number): Promise<AxiosResponse>{
+
+        const response = await httpClient.get<AxiosResponse>(`${resourceUrl}findAll?page=${page}&size=${size}`)
+
+        return response
+
+
+        
     }
+
+    return {
+        salvarProduto,
+        listAll
+        
+    }
+   
 
 
 }
