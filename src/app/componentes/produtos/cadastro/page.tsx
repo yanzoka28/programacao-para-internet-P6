@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import LayoutContainer from "../../layout/page";
 import 'bulma/css/bulma.css'
 import { log } from "console";
 import Input from "../../commons/input/input";
 import { useProdutoService } from "@/app/services/produto/produtoService";
 import Message from "../../commons/message/message";
+import { useSearchParams } from "next/navigation";
 
 const CadastroProduto = () => {
     const produtoService = useProdutoService();
@@ -18,6 +19,17 @@ const CadastroProduto = () => {
 
     const [tipo, setTipo] = useState("")
     const [mensagem, setMensagem] = useState("")
+
+    const searchParams = useSearchParams();
+    const id_product = searchParams.get("id");
+
+    // useEffect(( => {
+    //     if(id_product){
+            
+    //     }
+        
+
+    // }))
 
     const produto = {
         description,

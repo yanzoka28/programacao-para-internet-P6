@@ -25,14 +25,18 @@ const DataTableProduto: React.FC<DataTableProdutoProps> = ({produtos, onEdit, on
                         <th>
                             Fabricante
                         </th>
-                        <th>
+                        <th style={{ textAlign: "center"}}>
                             Ações
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {produtos.map(p => <ProdutoRow key={p.id} produto={p} onEdit={onEdit} onDelete={onDelete}/>)}
+                    {
+                        
+                    produtos.map(p => <ProdutoRow key={p.id} produto={p} onEdit={onEdit} onDelete={onDelete}/>)
+                    
+                    }
                 </tbody>
             </table>
         
@@ -62,10 +66,9 @@ const ProdutoRow: React.FC<ProdutoRowProps> = ({produto, onEdit, onDelete}) => {
             <td>
                 {produto.maker}
             </td>
-            <td>
+            <td style={{ display: "flex", justifyContent: "center"}}>
                 <button onClick={e => onEdit(produto)} className="button is-link is-dark has-text-white mr-4">Editar</button>
-            </td>
-            <td>
+            
                 <button onClick={e => onDelete(produto)} className="button is-danger is-dark has-text-white">Deletar</button>
             </td>
         </tr>

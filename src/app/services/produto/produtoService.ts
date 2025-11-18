@@ -19,15 +19,21 @@ export const useProdutoService = () => {
 
         const response = await httpClient.get<AxiosResponse>(`${resourceUrl}findAll?page=${page}&size=${size}`)
 
+        return response   
+    }
+
+    async function findById(id = Number): Promise<AxiosResponse>{
+
+        const response = await httpClient.get<AxiosResponse>(`${resourceUrl}${id}`)
+
         return response
 
-
-        
     }
 
     return {
         salvarProduto,
-        listAll
+        listAll,
+        findById
         
     }
    

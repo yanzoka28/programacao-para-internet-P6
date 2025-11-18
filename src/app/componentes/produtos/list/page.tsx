@@ -6,11 +6,15 @@ import LayoutContainer from "../../layout/page";
 import DataTableProduto from "./dataTableProduto";
 import Paginacao from "./paginacao";
 import { useProdutoService } from "@/app/services/produto/produtoService";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 
 
 const ListaProduto: React.FC = () => {
+
+    const router = useRouter();
 
     const [produtos, setProduto] = useState([]);
     const [page, setPage] = useState(0)
@@ -28,15 +32,15 @@ const ListaProduto: React.FC = () => {
     const listProduto = (pageNumber: number) => {
         produtoService.listAll(pageNumber, pageItems).then(res => {
 
-            setProduto(res.data)
+            setProduto(res.data.content)
             setTotalPages(res.data.totalPages)
 
         })
     }
 
     const onEdit = (produto: ProdutoResquest) => {
-        console.log(produto);
-        
+        const url = `componentes/produtos/cadastro?id=${produto.id}`;
+        router.push(url)
     }
     const onDelete = (produto: ProdutoResquest) => {
         console.log(produto);
@@ -47,6 +51,12 @@ const ListaProduto: React.FC = () => {
     return(
 
         <LayoutContainer titulo="Lista de Produtos">
+
+            <Link href={"/componentes/produtos/cadastro"}>
+            
+                <button className="buttom is-info is-dark has-text-white mb-4">Castrar Produto</button>
+
+            </Link>
 
             <DataTableProduto produtos={produtos} onEdit={onEdit} onDelete={onDelete}/>
 
